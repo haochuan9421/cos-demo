@@ -2,7 +2,7 @@
 var crypto = require('crypto');
 var request = require('request');
 var express = require('express');
-var COS = require('cos-nodejs-sdk-v5');
+var getAuth = require('../utils/getAuth')
 var bodyParser = require('body-parser');
 
 // 配置参数
@@ -10,11 +10,11 @@ var config = {
     Url: 'https://sts.api.qcloud.com/v2/index.php',
     Domain: 'sts.api.qcloud.com',
     Proxy: '',
-    SecretId: 'AKIDxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', // 固定密钥
-    SecretKey: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', // 固定密钥
-    Bucket: 'test-1250000000',
+    SecretId: '******', // 固定密钥
+    SecretKey: '******', // 固定密钥
+    Bucket: 'mycos-******',
     Region: 'ap-guangzhou',
-    AllowPrefix: '_ALLOW_DIR_/*', // 这里改成允许的路径前缀，这里可以根据自己网站的用户登录态判断允许上传的目录，例子：* 或者 a/* 或者 a.jpg
+    AllowPrefix: '*', // 这里改成允许的路径前缀，这里可以根据自己网站的用户登录态判断允许上传的目录，例子：* 或者 a/* 或者 a.jpg
 };
 
 
@@ -162,6 +162,7 @@ var getTempKeys = function (callback) {
         if (body && body.data) body = body.data;
         tempKeysCache.credentials = body.credentials;
         tempKeysCache.expiredTime = body.expiredTime;
+        tempKeysCache.policyStr = policyStr;
         callback(err, body);
     });
 };
@@ -173,7 +174,7 @@ app.use(bodyParser.json());
 // CORS 配置
 app.all('*', function (req, res, next) {
     res.header('Content-Type', 'application/json');
-    res.header('Access-Control-Allow-Origin', 'http://127.0.0.1');
+    res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'origin,accept,content-type');
     if (req.method.toUpperCase() === 'OPTIONS') {
         res.end();
@@ -201,7 +202,7 @@ app.all('/sts-auth', function (req, res, next) {
                 Headers: req.body.headers || req.query.headers || {},
             };
             data = {
-                Authorization: COS.getAuthorization(opt),
+                Authorization: getAuth(opt),
                 XCosSecurityToken: tempKeys['credentials'] && tempKeys['credentials']['sessionToken'],
             };
         }
@@ -209,8 +210,7 @@ app.all('/sts-auth', function (req, res, next) {
     });
 });
 app.all('*', function (req, res, next) {
-    res.writeHead(404);
-    res.send('404 Not Found');
+  res.status(404).send('404 Not Found');
 });
 
 // 启动签名服务

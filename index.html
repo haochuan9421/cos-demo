@@ -24,7 +24,7 @@
 <script>
     (function () {
         // 请求用到的参数
-        var Bucket = 'test-1250000000';
+        var Bucket = 'mycos-******';
         var Region = 'ap-guangzhou';
         var protocol = location.protocol === 'https:' ? 'https:' : 'http:';
         var prefix = protocol + '//' + Bucket + '.cos.' + Region + '.myqcloud.com/';
@@ -33,8 +33,8 @@
             var method = (options.Method || 'get').toLowerCase();
             var key = options.Key || '';
             var pathname = key.indexOf('/') === 0 ? key : '/' + key;
-            // var url = 'http://127.0.0.1:3000/sts-auth' +
-            var url = '../server/sts-auth.php' +
+            // var url = 'http://localhost:8888/sts-auth.php' + // 使用php接口需要：server/sts-auth.php 运行在在本机8888端口下
+            var url = 'http://127.0.0.1:3000/sts-auth' + // 使用node接口需要：在当前目录下执行 node ./server/sts-auth.js 以启动node服务
                 '?method=' + method +
                 '&pathname=' + encodeURIComponent(pathname);
             var xhr = new XMLHttpRequest();

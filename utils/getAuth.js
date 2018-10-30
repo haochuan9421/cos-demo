@@ -45,32 +45,32 @@ var getAuth = function (opt) {
   if (!SecretKey) return console.error('missing param SecretKey');
 
   var getObjectKeys = function (obj) {
-      var list = [];
-      for (var key in obj) {
-          if (obj.hasOwnProperty(key)) {
-              list.push(key);
-          }
+    var list = [];
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        list.push(key);
       }
-      return list.sort(function (a, b) {
-          a = a.toLowerCase();
-          b = b.toLowerCase();
-          return a === b ? 0 : (a > b ? 1 : -1);
-      });
+    }
+    return list.sort(function (a, b) {
+      a = a.toLowerCase();
+      b = b.toLowerCase();
+      return a === b ? 0 : (a > b ? 1 : -1);
+    });
   };
 
   var obj2str = function (obj) {
-      var i, key, val;
-      var list = [];
-      var keyList = getObjectKeys(obj);
-      for (i = 0; i < keyList.length; i++) {
-          key = keyList[i];
-          val = (obj[key] === undefined || obj[key] === null) ? '' : ('' + obj[key]);
-          key = key.toLowerCase();
-          key = camSafeUrlEncode(key);
-          val = camSafeUrlEncode(val) || '';
-          list.push(key + '=' +  val)
-      }
-      return list.join('&');
+    var i, key, val;
+    var list = [];
+    var keyList = getObjectKeys(obj);
+    for (i = 0; i < keyList.length; i++) {
+      key = keyList[i];
+      val = (obj[key] === undefined || obj[key] === null) ? '' : ('' + obj[key]);
+      key = key.toLowerCase();
+      key = camSafeUrlEncode(key);
+      val = camSafeUrlEncode(val) || '';
+      list.push(key + '=' +  val)
+    }
+    return list.join('&');
   };
 
   // 签名有效起止时间
@@ -79,9 +79,9 @@ var getAuth = function (opt) {
 
   var Expires = opt.Expires || opt.expires;
   if (Expires === undefined) {
-      exp += 900; // 签名过期时间为当前 + 900s
+    exp += 900; // 签名过期时间为当前 + 900s
   } else {
-      exp += (Expires * 1) || 0;
+    exp += (Expires * 1) || 0;
   }
 
   // 要用到的 Authorization 参数列表
@@ -107,7 +107,7 @@ var getAuth = function (opt) {
   var stringToSign = ['sha1', qSignTime, res, ''].join('\n');
 
   // 步骤四：计算 Signature
-  var qSignature = crypto.createHmac('sha1', signKey).update(stringToSign).digest('hex');
+  var qSignature = crypto.createHmac('sha1', signKey).update(stringToSign);
 
   // 步骤五：构造 Authorization
   var authorization = [

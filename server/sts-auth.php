@@ -5,11 +5,11 @@ $config = array(
     'Url' => 'https://sts.api.qcloud.com/v2/index.php',
     'Domain' => 'sts.api.qcloud.com',
     'Proxy' => '',
-    'SecretId' => 'AKIDxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', // 固定密钥
-    'SecretKey' => 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', // 固定密钥
-    'Bucket' => 'test-1250000000',
+    'SecretId' => '******', // 固定密钥
+    'SecretKey' => '******', // 固定密钥
+    'Bucket' => 'mycos-******',
     'Region' => 'ap-guangzhou',
-    'AllowPrefix' => '_ALLOW_DIR_/*', // 这里改成允许的路径前缀，这里可以根据自己网站的用户登录态判断允许上传的目录，例子：* 或者 a/* 或者 a.jpg
+    'AllowPrefix' => '*', // 这里改成允许的路径前缀，这里可以根据自己网站的用户登录态判断允许上传的目录，例子：* 或者 a/* 或者 a.jpg
 );
 // 缓存临时密钥
 if (!isset($_SESSION['tempKeysCache'])) {
@@ -242,6 +242,6 @@ if ($tempKeys && isset($tempKeys['credentials'])) {
 }
 // 返回数据给前端
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: http://127.0.0.1'); // 这里修改允许跨域访问的网站
+header('Access-Control-Allow-Origin: *'); // 这里修改允许跨域访问的网站
 header('Access-Control-Allow-Headers: origin,accept,content-type');
 echo json_encode($data);
